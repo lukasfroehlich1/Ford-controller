@@ -29,14 +29,13 @@ def handle_task():
 		time.sleep(seconds)
 	try:
 		print "Starting photo sequence"
-		filename = os.path.join(os.curdir,'image/img.jpg')
+		filename = 'image/img.jpg'
 		cmd = 'raspistill -o ' + filename
-		pid = subprocess.call(cmd, shell=True)
+		pid = call(cmd, shell=True)
 		print "Finished photo sequence"
 	except:
 		print "\nGoodbye!"
-	return send_file(filename, mimetype='image/gif')
-	# return Response(json.dumps(res), mimetype='application/json', status=str(res["status"]))
+	return Response(json.dumps(res), mimetype='application/json', status=str(res["status"]))
 
 def handle_task_test():
 	print 'here'
@@ -77,5 +76,5 @@ def copy_rename(old_file_name, new_file_name):
 
 
 if __name__ == '__main__':
-	app.run('0.0.0.0')
+	app.run('0.0.0.0', debug = True)
 	#handle_task_test()
