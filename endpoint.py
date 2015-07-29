@@ -4,6 +4,7 @@ import time
 import json
 import os
 import shutil
+from flask import send_file
 
 app = Flask(__name__)
 
@@ -26,7 +27,16 @@ def handle_task():
 		print c
 		call(['irsend', 'SEND_ONCE', device, c])
 		time.sleep(seconds)
-	return Response(json.dumps(res), mimetype='application/json', status=str(res["status"]))
+	try:
+		print "Starting photo sequence"
+		filename = os.path.join(os.curdir,'image/img.jpg')
+		cmd = 'raspistill -o ' + filename
+		pid = subprocess.call(cmd, shell=True)
+		print "Finished photo sequence"
+	except:
+		print "\nGoodbye!"
+	return send_file(filename, mimetype='image/gif')
+	# return Response(json.dumps(res), mimetype='application/json', status=str(res["status"]))
 
 def handle_task_test():
 	print 'here'
@@ -61,6 +71,10 @@ def copy_rename(old_file_name, new_file_name):
 	src_file = os.path.join(src_dir, old_file_name)
 	shutil.copy(src_file,dst_dir)
 	os.rename(dst_file, new_dst_file_name)
+
+
+
+
 
 if __name__ == '__main__':
 	app.run('0.0.0.0')
