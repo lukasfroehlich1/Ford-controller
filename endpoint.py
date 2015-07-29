@@ -15,6 +15,7 @@ def handle_task():
 	res = {"status": 200, "result": "DONE"}
 	fail = {"status": 200, "result": "ERROR"}
 	device = request.form['device']
+	jobid = request.form['job_id']
 	codes = request.form['code'].split(';')
 	print 'code : {}'.format(codes)
 	filename = device +'.conf'
@@ -33,7 +34,7 @@ def handle_task():
 
 	try:
 		print "Starting photo sequence"
-		filename = 'static/image/img.jpg'
+		filename = 'static/image/'+jobid+'.jpg'
 		cmd = 'raspistill -o ' + filename
 		call(cmd, shell=True)
 		print "Finished photo sequence"
