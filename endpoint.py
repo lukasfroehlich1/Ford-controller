@@ -33,7 +33,7 @@ def handle_task():
 
 	try:
 		print "Starting photo sequence"
-		filename = 'image/img.jpg'
+		filename = 'static/image/img.jpg'
 		cmd = 'raspistill -o ' + filename
 		call(cmd, shell=True)
 		print "Finished photo sequence"
