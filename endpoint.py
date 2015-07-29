@@ -34,7 +34,7 @@ def handle_task():
 	try:
 		print "Starting photo sequence"
 		filename = 'static/image/img.jpg'
-		cmd = 'raspistill -t 0 -o ' + filename
+		cmd = 'raspistill -n -t 0 -o ' + filename
 		call(cmd, shell=True)
 		print "Finished photo sequence"
 	except:
