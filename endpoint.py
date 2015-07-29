@@ -4,7 +4,7 @@ import time
 import json
 import os
 import shutil
-from flask import send_file
+
 
 app = Flask(__name__)
 
@@ -12,8 +12,8 @@ seconds = 1
 @app.route('/', methods=['POST'])
 def handle_task():
 	print "started"
-	res = {"status": 200, "detail": "Done"}
-	fail = {"status": 404, "detail": "File Not Found."}
+	res = {"status": 200, "result": "DONE"}
+	fail = {"status": 200, "result": "ERROR"}
 	device = request.form['device']
 	codes = request.form['code'].split(';')
 	print 'code : {}'.format(codes)
@@ -25,16 +25,21 @@ def handle_task():
 			time.sleep(sleeptime)
 			continue
 		print c
-		call(['irsend', 'SEND_ONCE', device, c])
-		time.sleep(seconds)
+		try:
+			call(['irsend', 'SEND_ONCE', device, c])
+			time.sleep(seconds)
+		except:
+			return Response(json.dumps(fail), mimetype='application/json', status=str(fail["status"]))
+
 	try:
 		print "Starting photo sequence"
 		filename = 'image/img.jpg'
 		cmd = 'raspistill -o ' + filename
-		pid = call(cmd, shell=True)
+		call(cmd, shell=True)
 		print "Finished photo sequence"
 	except:
-		print "\nGoodbye!"
+		return Response(json.dumps(fail), mimetype='application/json', status=str(fail["status"]))
+
 	return Response(json.dumps(res), mimetype='application/json', status=str(res["status"]))
 
 def handle_task_test():
