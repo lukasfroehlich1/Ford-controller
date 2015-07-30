@@ -1,4 +1,5 @@
 from flask import Flask, request, Response
+
 from subprocess import call
 import time
 import json
@@ -8,7 +9,7 @@ import shutil
 
 app = Flask(__name__)
 
-seconds = 1
+seconds = 0
 @app.route('/', methods=['POST'])
 def handle_task():
 	print "started"
@@ -18,8 +19,8 @@ def handle_task():
 	jobid = request.form['job_id']
 	codes = request.form['code'].split(';')
 	print 'code : {}'.format(codes)
-	filename = device +'.conf'
-	copy_rename(filename,'lircd.conf')
+	#filename = device +'.conf'
+	#copy_rename(filename,'lircd.conf')
 	for c in codes:
 		if c.startswith('SLEEP'):
 			sleeptime = int(c.split('_')[1])
@@ -35,7 +36,7 @@ def handle_task():
 	try:
 		print "Starting photo sequence"
 		filename = 'static/image/'+jobid+'.jpg'
-		cmd = 'raspistill -n -t 0 -o ' + filename
+		cmd = 'raspistill -n -o ' + filename
 		call(cmd, shell=True)
 		print "Finished photo sequence"
 	except:
@@ -78,7 +79,9 @@ def copy_rename(old_file_name, new_file_name):
 	os.rename(dst_file, new_dst_file_name)
 
 
-
+@app.route('/health_check', methods=['GET'])
+def test():
+	return Response('OK', content_type='text/plain')
 
 
 if __name__ == '__main__':
